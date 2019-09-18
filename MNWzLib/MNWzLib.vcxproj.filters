@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="NameSpace">
+      <UniqueIdentifier>{74d2bcf8-a63e-4ff2-9155-a55dd6afac01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{b11336a8-ee94-4f88-95b3-cb7c21decb30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PCOM">
+      <UniqueIdentifier>{352271e1-58ea-4f2d-81e9-8d9bf37c5727}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="WzFileSystem.h">
+      <Filter>NameSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardFileSystem.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryPoolMan.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WzArchive.h">
+      <Filter>NameSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="WzPackage.h">
+      <Filter>NameSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="WzStream.h">
+      <Filter>NameSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="WzNameSpace.h">
+      <Filter>NameSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtility.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="AESCipher.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WzNameSpaceProperty.h">
+      <Filter>NameSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="FastAES.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WzProperty.h">
+      <Filter>PCOM</Filter>
+    </ClInclude>
+    <ClInclude Include="WzMappedFileStream.h">
+      <Filter>NameSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="WzDelayedVariant.h">
+      <Filter>PCOM</Filter>
+    </ClInclude>
+    <ClInclude Include="WzIterator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="WzFileSystem.cpp">
+      <Filter>NameSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="WzArchive.cpp">
+      <Filter>NameSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="WzPackage.cpp">
+      <Filter>NameSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="WzStream.cpp">
+      <Filter>NameSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="WzNameSpace.cpp">
+      <Filter>NameSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtility.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="AESCipher.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="WzNameSpaceProperty.cpp">
+      <Filter>NameSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="FastAES.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="WzProperty.cpp">
+      <Filter>PCOM</Filter>
+    </ClCompile>
+    <ClCompile Include="WzMappedFileStream.cpp">
+      <Filter>NameSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="WzDelayedVariant.cpp">
+      <Filter>PCOM</Filter>
+    </ClCompile>
+    <ClCompile Include="WzIterator.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
