@@ -78,8 +78,8 @@ const SkillEntry * SkillInfo::GetSkillByID(int nSkillID) const
 
 void SkillInfo::IterateSkillInfo()
 {
-	t1 = std::chrono::high_resolution_clock::now();
 	printf("[SkillInfo::IterateSkillInfo<IterateSkillInfo>]On iterating all skills....\n");
+	t1 = std::chrono::high_resolution_clock::now();
 	((WzPackage*)pArchive)->LoadSubItem(); //Expand all sub nodes
 	//static auto& skillWz = stWzResMan->GetWz(Wz::Skill);
 	bool continued = false;

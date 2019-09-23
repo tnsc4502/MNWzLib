@@ -1,6 +1,7 @@
 #include "WzArchive.h"
 #include "WzStream.h"
 #include "WzPackage.h"
+#include "WzNameSpaceProperty.h"
 #include "StandardFileSystem.h"
 #include "MemoryPoolMan.h"
 #include "FastAES.h"
@@ -18,7 +19,13 @@ WzArchive::WzArchive(const std::wstring& sArchivePath, const std::string& sArchi
 	Read(aHeader, 4);
 
 	if (strcmp(aHeader, "PKG1"))
-		WvsException::FatalError("[WzPackage::WzPackage]Error : Incorrect Header<%s>", aHeader);
+	{
+		//Raw .Img file
+		m_bEncrypted = false;
+		m_pTopNameSpace = AllocObj(WzNameSpaceProperty)(this, WzNameSpace::WzNameSpaceType::Type_Property, sArchiveName, 0);
+		m_pTopNameSpace->OnGetItem();
+		return;
+	}
 
 	unsigned long long ulLength = 0;
 	Read((char*)&ulLength, sizeof(ulLength));
@@ -33,7 +40,7 @@ WzArchive::WzArchive(const std::wstring& sArchivePath, const std::string& sArchi
 	Read((char*)&uEncVersion, sizeof(short));
 	std::string sVersion;
 
-	m_pPackage = AllocObj(WzPackage)(this, WzNameSpace::WzNameSpaceType::Type_Directory, sArchiveName, GetPosition());
+	m_pTopNameSpace = AllocObj(WzPackage)(this, WzNameSpace::WzNameSpaceType::Type_Directory, sArchiveName, GetPosition());
 	//Find matched version key.
 	for (unsigned int uVersion = 1024; uVersion > 0; --uVersion)
 	{
@@ -42,18 +49,18 @@ WzArchive::WzArchive(const std::wstring& sArchivePath, const std::string& sArchi
 		for (auto c : sVersion)
 			m_uKey = 32 * m_uKey + c + 1;
 		if ((0xFF ^ (m_uKey >> 24) ^ (m_uKey << 8 >> 24) ^ (m_uKey << 16 >> 24) ^ (m_uKey << 24 >> 24)) == uEncVersion
-			&& m_pPackage->LoadDirectory(true))
+			&& ((WzPackage*)m_pTopNameSpace)->LoadDirectory(true))
 			break;
 	}
-	m_pPackage->LoadDirectory();
+	((WzPackage*)m_pTopNameSpace)->LoadDirectory();
 }
 
 WzArchive::~WzArchive()
 {
 	if (m_pStream)
 		FreeObj(m_pStream);
-	if (m_pPackage)
-		FreeObj(m_pPackage);
+	if (m_pTopNameSpace)
+		FreeObj(m_pTopNameSpace);
 }
 
 WzArchive *WzArchive::Mount(const std::wstring & sArchivePath, const std::string& sArchiveName, FastAES* pChipher)
@@ -112,7 +119,7 @@ void WzArchive::Read(char *pBuffer, unsigned int uSize)
 
 WzNameSpace* WzArchive::GetRoot()
 {
-	return m_pPackage;
+	return m_pTopNameSpace;
 }
 
 std::string WzArchive::DecodeString()
@@ -144,5 +151,10 @@ std::string WzArchive::DecodePropString(unsigned int uRootPropPos)
 			return "";
 			//WvsException::FatalError("Unknown type of prop string <%d>.", nType);
 	}
+}
+
+bool WzArchive::Encrypted() const
+{
+	return m_bEncrypted;
 }
 

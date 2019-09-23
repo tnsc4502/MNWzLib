@@ -13,8 +13,76 @@ int main()
 {
 	WzFileSystem wz;
 	wz.Init(L"./WzDir/");
-	auto pMap = wz.GetItem("Map.wz");
-	((WzPackage*)pMap->GetItem("Obj"))->LoadSubItem();
+	WzIterator reward(wz.GetItem("Reward.img"));
+	for (auto& mobNode : reward)
+	{
+		for (auto& rewardNode : mobNode)
+		{
+			std::cout << "Node = " << rewardNode.GetName() << std::endl;
+			for (auto& node : rewardNode)
+			{
+				if (node.GetName() == "prob") {
+					std::string strProb = node;
+					auto dProb = atof(strProb.substr(4, strProb.size() - 4).c_str()) * 1000000000.0;
+					std::cout << "\tProb = " << dProb << std::endl;
+					//pInfo->m_unWeight = (unsigned int)dProb;
+				}
+				else if (node.GetName() == "money")
+				{
+					std::cout << "\tMoney = " << (std::string)node << std::endl; //test int to str conversion.
+					//pInfo->m_nMoney = (int)node;
+					//pInfo->m_nType = 0;
+				}
+				else if (node.GetName() == "item")
+				{
+					std::cout << "\tItem = " << (std::string)node << std::endl;  //test int to str conversion.
+					//pInfo->m_nType = 1;
+					//pInfo->m_nItemID = (int)node;
+					//int nQuestID = QuestMan::GetInstance()->GetQuestByItem(pInfo->m_nItemID);
+					/*if (nQuestID != 0)
+					{
+					auto pDemand = QuestMan::GetInstance()->GetCompleteDemand(nQuestID);
+					if (pDemand)
+					{
+					pInfo->m_usQRKey = nQuestID;
+					auto& aDemandItem = pDemand->m_mDemandItem;
+					for (auto& nItem : aDemandItem)
+					if (nItem.first == pInfo->m_nItemID)
+					pInfo->m_nMaxCount = nItem.second;
+					}
+					}*/
+				}
+				else if (node.GetName() == "min")
+					std::cout << "\tmin = " << (int)node << std::endl;
+				//pInfo->m_nMin = (int)node;
+				else if (node.GetName() == "max")
+					std::cout << "\tmax = " << (int)node << std::endl;
+				//pInfo->m_nMax = (int)node;
+				else if (node.GetName() == "period")
+					std::cout << "\tperiod = " << (int)node << std::endl;
+				//pInfo->m_nPeriod = (int)node;
+				else if (node.GetName() == "premium")
+					std::cout << "\tpremium = " << (int)node << std::endl;
+				//pInfo->m_bPremiumMap = ((int)node == 1);
+			}
+		}
+	}
+	auto pSkill = wz.GetItem("Skill.wz");
+	WzIterator iSkill(pSkill);
+	/*for (auto& top : iSkill)
+	{
+		auto& skill = top["skill"];
+		for (auto& skills : skill)
+		{
+			std::cout << skills.GetName() << std::endl;
+		}
+		std::cout << top.GetName() << std::endl;
+
+	}*/
+	//WzFileSystem wz;
+	//wz.Init(L"./WzDir/");
+	//auto pMap = wz.GetItem("Map.wz");
+	//((WzPackage*)pMap->GetItem("Obj"))->LoadSubItem();
 	/*WzFileSystem wz;
 	wz.Init(L"./WzDir/");
 	auto t1 = std::chrono::high_resolution_clock::now();

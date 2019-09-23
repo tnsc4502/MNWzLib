@@ -19,8 +19,6 @@ WzIterator::WzIterator(WzNameSpace* pNextNS, WzNameSpace::NameSpaceContainerType
 {
 	m_pIterProp = nullptr;
 	m_pIterNS = pNextNS;
-	if (m_pIterNS)
-		m_pIterNS->OnGetItem();
 	m_itNS = it;
 	++m_itNS;
 	m_itEndNS = itEnd;

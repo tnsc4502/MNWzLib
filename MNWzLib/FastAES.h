@@ -6,9 +6,9 @@ class WzArchive;
 class FastAES
 {
 	unsigned char 
-		aWzKey[0x10000],
-		aWideWzKey[0x10000],
-		aKeyStore[0x10000];
+		aWzKey[2][0x10000],
+		aWideWzKey[2][0x10000],
+		aKeyStore[2][0x10000];
 public:
 	FastAES();
 	~FastAES();
