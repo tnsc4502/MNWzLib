@@ -3,6 +3,7 @@
 
 //USE WIN32 MAPPING FILE IMPL.
 #define USE_MAPPING_FILE
+#define USE_FAST_AES
 
 #ifdef USE_MAPPING_FILE
 #include "WzMappedFileStream.h"
@@ -10,6 +11,14 @@ typedef WzMappedFileStream WzStreamType;
 #else
 #include "WzStream.h"
 typedef WzStream WzStreamType;
+#endif
+
+#ifdef USE_FAST_AES
+class FastAES;
+typedef FastAES CipherType;
+#else
+class AESCipher;
+typedef AESCipher CipherType;
 #endif
 
 class WzPackage;
@@ -24,16 +33,16 @@ class WzArchive
 
 	WzStreamType* m_pStream = nullptr;
 	WzNameSpace* m_pTopNameSpace = nullptr;
-	FastAES* m_pCipher = nullptr;
+	CipherType* m_pCipher = nullptr;
 
-	WzArchive(const std::wstring& sArchivePath, const std::string& sArchiveName, FastAES* pChipher);
+	WzArchive(const std::wstring& sArchivePath, const std::string& sArchiveName, CipherType* pChipher);
 
 public:
 	~WzArchive();
-	static WzArchive* Mount(const std::wstring& sArchivePath, const std::string& sArchiveName, FastAES* pChipher);
+	static WzArchive* Mount(const std::wstring& sArchivePath, const std::string& sArchiveName, CipherType* pChipher);
 	void SetPosition(unsigned int uPos);
 	WzStreamType* GetStream();
-	FastAES* GetCipher();
+	CipherType* GetCipher();
 	unsigned int GetPosition() const;
 	unsigned int GetBeginPos() const;
 	unsigned int GetArchiveKey() const;

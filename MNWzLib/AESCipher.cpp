@@ -1,4 +1,5 @@
 #include "AESCipher.h"
+#include "WzArchive.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -16,7 +17,7 @@ const char AESCipher::bDefaultAESKeyValue[16] =
 
 AESCipher::AESCipher()
 {
-	UserKey[0] = 0x13;
+	/*UserKey[0] = 0x13;
 	UserKey[1] = 0x52;
 	UserKey[2] = 0x2A;
 	UserKey[3] = 0x5B;
@@ -47,7 +48,7 @@ AESCipher::AESCipher()
 	UserKey[28] = 0x52;
 	UserKey[29] = 0xDE;
 	UserKey[30] = 0xC7;
-	UserKey[31] = 0x1E;
+	UserKey[31] = 0x1E;*/
 }
 
 
@@ -75,6 +76,38 @@ void AESCipher::Encrypt(char * pDest, char * pSrc, int nLen, unsigned int * pdwK
 	if (nLen)
 		OFB_EncUpdate(&AlgInfo, pSrc, nLen, pDest, &DstLen);
 	OFB_EncFinal(&AlgInfo, &pDest[DstLen], &DstLen);
+}
+
+std::string AESCipher::DecodeString(WzArchive * pArchive)
+{
+	static char in[0x10000];
+	static char16_t ws[0x8000];
+	static char ns[0x10000];
+	int nLen = 0;
+
+	pArchive->Read((char*)&nLen, 1);
+	char cLen = ((char*)&nLen)[0];
+	if (cLen > 0)
+	{
+		if (cLen == 127)
+			pArchive->Read((char*)&nLen, 4);
+		nLen *= 2;
+
+		Decrypt(ns, pArchive->GetStream()->GetStreamPtr(), nLen, &BasicKey);
+	}
+	else
+	{
+		if (cLen == -128)
+			pArchive->Read((char*)&nLen, 4);
+		else
+			nLen = cLen * -1;
+
+		Decrypt(ns, pArchive->GetStream()->GetStreamPtr(), nLen, &BasicKey);
+	}
+
+	pArchive->GetStream()->SetPosition(pArchive->GetStream()->GetPosition() + nLen);
+	ns[nLen] = 0;
+	return std::string(ns, nLen);
 }
 
 void AESCipher::GenTables()

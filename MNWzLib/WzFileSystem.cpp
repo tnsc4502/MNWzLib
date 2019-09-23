@@ -2,9 +2,14 @@
 #include "WzArchive.h"
 #include "StandardFileSystem.h"
 #include "MemoryPoolMan.h"
-#include "FastAES.h"
 #include <iostream>
 #include <fstream>
+
+#ifdef USE_FAST_AES
+#include "FastAES.h"
+#else
+#include "AESCipher.h"
+#endif
 
 WzFileSystem::WzFileSystem()
 {
@@ -44,8 +49,7 @@ void WzFileSystem::Init(const filesystem::path &sPath)
 {
 	m_sFileSysPath = GetAbsPath(sPath);
 	m_bInitialized = true;
-	m_pChiper = AllocObj(FastAES);
-	m_pChiper->Init();
+	m_pChiper = AllocObj(CipherType);
 }
 
 WzNameSpace* WzFileSystem::GetItem(const filesystem::path &sArchiveName)

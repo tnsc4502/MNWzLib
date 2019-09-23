@@ -116,6 +116,7 @@
     <ClInclude Include="MemoryPoolMan.h" />
     <ClInclude Include="StandardFileSystem.h" />
     <ClInclude Include="StringUtility.h" />
+    <ClInclude Include="WzAESKeyGen.h" />
     <ClInclude Include="WzArchive.h" />
     <ClInclude Include="WzDelayedVariant.h" />
     <ClInclude Include="WzFileSystem.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="Exception.cpp" />
     <ClCompile Include="FastAES.cpp" />
     <ClCompile Include="StringUtility.cpp" />
+    <ClCompile Include="WzAESKeyGen.cpp" />
     <ClCompile Include="WzArchive.cpp" />
     <ClCompile Include="WzDelayedVariant.cpp" />
     <ClCompile Include="WzFileSystem.cpp" />

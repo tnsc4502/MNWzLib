@@ -4,11 +4,16 @@
 #include "WzNameSpaceProperty.h"
 #include "StandardFileSystem.h"
 #include "MemoryPoolMan.h"
-#include "FastAES.h"
 #include "Exception.h"
 #include <iostream>
 
-WzArchive::WzArchive(const std::wstring& sArchivePath, const std::string& sArchiveName, FastAES* pChipher)
+#ifdef USE_FAST_AES
+#include "FastAES.h"
+#else
+#include "AESCipher.h"
+#endif
+
+WzArchive::WzArchive(const std::wstring& sArchivePath, const std::string& sArchiveName, CipherType* pChipher)
 {
 	m_pStream = AllocObj(WzStreamType)(sArchivePath);
 	m_pCipher = pChipher;
@@ -63,7 +68,7 @@ WzArchive::~WzArchive()
 		FreeObj(m_pTopNameSpace);
 }
 
-WzArchive *WzArchive::Mount(const std::wstring & sArchivePath, const std::string& sArchiveName, FastAES* pChipher)
+WzArchive *WzArchive::Mount(const std::wstring & sArchivePath, const std::string& sArchiveName, CipherType* pChipher)
 {
 	if (!filesystem::exists(sArchivePath))
 		return nullptr;
@@ -82,7 +87,7 @@ WzStreamType* WzArchive::GetStream()
 	return m_pStream;
 }
 
-FastAES* WzArchive::GetCipher()
+CipherType* WzArchive::GetCipher()
 {
 	return m_pCipher;
 }

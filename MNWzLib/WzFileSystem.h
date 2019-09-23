@@ -3,8 +3,16 @@
 #include <map>
 #include "StandardFileSystem.h"
 
-class WzArchive;
+#define USE_FAST_AES
+#ifdef USE_FAST_AES
 class FastAES;
+typedef FastAES CipherType;
+#else
+class AESCipher;
+typedef AESCipher CipherType;
+#endif
+
+class WzArchive;
 class WzNameSpace;
 
 class WzFileSystem
@@ -19,7 +27,7 @@ class WzFileSystem
 	//Mount (or say, read) a file named sArchiveName(.wz)
 	WzNameSpace* TryMount(const filesystem::path& sArchiveName);
 
-	FastAES* m_pChiper = nullptr;
+	CipherType* m_pChiper = nullptr;
 
 public:
 	WzFileSystem();

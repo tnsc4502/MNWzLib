@@ -60,6 +60,9 @@
     <ClInclude Include="WzIterator.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="WzAESKeyGen.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WzFileSystem.cpp">
@@ -102,6 +105,9 @@
       <Filter>PCOM</Filter>
     </ClCompile>
     <ClCompile Include="WzIterator.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="WzAESKeyGen.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>

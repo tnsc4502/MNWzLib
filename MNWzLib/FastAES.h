@@ -9,6 +9,9 @@ class FastAES
 		aWzKey[2][0x10000],
 		aWideWzKey[2][0x10000],
 		aKeyStore[2][0x10000];
+
+	void GenKey(unsigned char* aKey, unsigned char *aResult);
+
 public:
 	FastAES();
 	~FastAES();

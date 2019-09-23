@@ -13,8 +13,8 @@ int main()
 {
 	WzFileSystem wz;
 	wz.Init(L"./WzDir/");
-	WzIterator reward(wz.GetItem("Reward.img"));
-	for (auto& mobNode : reward)
+	//WzIterator reward(wz.GetItem("Reward.img"));
+	/*for (auto& mobNode : reward)
 	{
 		for (auto& rewardNode : mobNode)
 		{
@@ -39,18 +39,7 @@ int main()
 					//pInfo->m_nType = 1;
 					//pInfo->m_nItemID = (int)node;
 					//int nQuestID = QuestMan::GetInstance()->GetQuestByItem(pInfo->m_nItemID);
-					/*if (nQuestID != 0)
-					{
-					auto pDemand = QuestMan::GetInstance()->GetCompleteDemand(nQuestID);
-					if (pDemand)
-					{
-					pInfo->m_usQRKey = nQuestID;
-					auto& aDemandItem = pDemand->m_mDemandItem;
-					for (auto& nItem : aDemandItem)
-					if (nItem.first == pInfo->m_nItemID)
-					pInfo->m_nMaxCount = nItem.second;
-					}
-					}*/
+
 				}
 				else if (node.GetName() == "min")
 					std::cout << "\tmin = " << (int)node << std::endl;
@@ -66,10 +55,14 @@ int main()
 				//pInfo->m_bPremiumMap = ((int)node == 1);
 			}
 		}
-	}
+	}*/
+	auto pEtc = wz.GetItem("Etc.wz");
+	WzIterator etc(pEtc);
+	for (auto& node : etc)
+		std::cout << node.GetName() << std::endl;
 	auto pSkill = wz.GetItem("Skill.wz");
 	WzIterator iSkill(pSkill);
-	/*for (auto& top : iSkill)
+	for (auto& top : iSkill)
 	{
 		auto& skill = top["skill"];
 		for (auto& skills : skill)
@@ -78,7 +71,7 @@ int main()
 		}
 		std::cout << top.GetName() << std::endl;
 
-	}*/
+	}
 	//WzFileSystem wz;
 	//wz.Init(L"./WzDir/");
 	//auto pMap = wz.GetItem("Map.wz");
