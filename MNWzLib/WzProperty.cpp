@@ -46,9 +46,6 @@ WzProperty::WzProperty(WzArchive* pArchive, const std::string& sPropName, unsign
 				pSubItem = AllocObj(WzProperty)(sName);
 				switch (nHeader)
 				{
-					case 9:
-
-						break;
 					case 19:
 					case 3:
 						pSubItem->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Filtered_Integer;
@@ -86,7 +83,17 @@ WzProperty::WzProperty(WzArchive* pArchive, const std::string& sPropName, unsign
 		}
 	}
 	if (sType == "Canvas") {}
-	else if (sType == "Shape2D#Vector2D") {}
+	else if (sType == "Shape2D#Vector2D") 
+	{
+		auto pX = AllocObj(WzProperty)("x");
+		auto pY = AllocObj(WzProperty)("y");
+		pX->m_wzVariant.vType = pY->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Filtered_Integer;
+		pX->m_wzVariant.uData.liData = m_pArchive->ReadFilter<int>();
+		pY->m_wzVariant.uData.liData = m_pArchive->ReadFilter<int>();
+
+		m_mChild.insert({ "x", pX });
+		m_mChild.insert({ "y", pY });
+	}
 	else if (sType == "Shape2D#Convex2D") {}
 	else if (sType == "Sound_DX8") {}
 	else if (sType == "UOL") {}

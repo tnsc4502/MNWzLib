@@ -222,18 +222,11 @@ void SkillInfo::LoadLevelDataByLevelNode(int nSkillID, SkillEntry * pEntry, void
 		pLevelData->m_nRb = PARSE_SKILLDATA(rb);
 		pLevelData->m_nFixDamage = PARSE_SKILLDATA(fixdamage);
 		pLevelData->m_nCriticalDamage = PARSE_SKILLDATA(criticalDamage);
-		/*auto&lt = skillCommonImg["lt"];
-		if (lt != empty && lt.Name() != "")
+		auto&lt = skillCommonImg["lt"];
+		if (lt != lt.end())
 		{
-			pLevelData->m_rc.left = lt["x"];
-			pLevelData->m_rc.top = lt["y"];
+			//printf("lt x = %d, y = %d\n", (int)lt["x"], (int)lt["y"])
 		}
-		auto&rb = skillCommonImg["rb"];
-		if (rb != empty && rb.Name() != "")
-		{
-			pLevelData->m_rc.right = rb["x"];
-			pLevelData->m_rc.bottom = rb["y"];
-		}*/
 		//if (IsSummonSkill(nSkillID))
 		//	pLevelData->m_nMobCount = skillData["summon"]["attack1"]["info"]["mobCount"];
 

@@ -2,7 +2,7 @@
 #include "WzArchive.h"
 #include "StringUtility.h"
 #include "Exception.h"
-#include "FastAES.h"
+#include "WzStreamCodec.h"
 #include "MemoryPoolMan.h"
 #include "WzNameSpaceProperty.h"
 

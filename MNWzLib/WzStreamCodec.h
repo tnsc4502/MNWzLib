@@ -3,7 +3,7 @@
 
 class WzArchive;
 
-class FastAES
+class WzStreamCodec
 {
 	unsigned char 
 		aWzKey[2][0x10000],
@@ -13,8 +13,8 @@ class FastAES
 	void GenKey(unsigned char* aKey, unsigned char *aResult);
 
 public:
-	FastAES();
-	~FastAES();
+	WzStreamCodec();
+	~WzStreamCodec();
 	void Init();
 	std::string DecodeString(WzArchive *pArchive);
 };

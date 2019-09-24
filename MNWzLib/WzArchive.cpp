@@ -8,7 +8,7 @@
 #include <iostream>
 
 #ifdef USE_FAST_AES
-#include "FastAES.h"
+#include "WzStreamCodec.h"
 #else
 #include "AESCipher.h"
 #endif

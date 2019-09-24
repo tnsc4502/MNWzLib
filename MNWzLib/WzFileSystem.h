@@ -5,8 +5,8 @@
 
 #define USE_FAST_AES
 #ifdef USE_FAST_AES
-class FastAES;
-typedef FastAES CipherType;
+class WzStreamCodec;
+typedef WzStreamCodec CipherType;
 #else
 class AESCipher;
 typedef AESCipher CipherType;
@@ -37,5 +37,6 @@ public:
 	void Init(const filesystem::path& sPath);
 
 	WzNameSpace* GetItem(const filesystem::path& sArchiveName);
+	void Unmount(const filesystem::path& sArchiveName);
 };
 

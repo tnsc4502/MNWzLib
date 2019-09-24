@@ -13,6 +13,7 @@ int main()
 {
 	WzFileSystem wz;
 	wz.Init(L"./WzDir/");
+
 	//WzIterator reward(wz.GetItem("Reward.img"));
 	/*for (auto& mobNode : reward)
 	{
@@ -56,13 +57,14 @@ int main()
 			}
 		}
 	}*/
-	auto pEtc = wz.GetItem("Etc.wz");
+	/*auto pEtc = wz.GetItem("Etc.wz");
+	wz.Unmount("Skill3.wz");
 	WzIterator etc(pEtc);
 	for (auto& node : etc)
 		std::cout << node.GetName() << std::endl;
-	auto pSkill = wz.GetItem("Skill.wz");
-	WzIterator iSkill(pSkill);
-	for (auto& top : iSkill)
+	auto ppSkill = wz.GetItem("Skill.wz");
+	WzIterator sSkill(ppSkill);
+	for (auto& top : sSkill)
 	{
 		auto& skill = top["skill"];
 		for (auto& skills : skill)
@@ -71,7 +73,7 @@ int main()
 		}
 		std::cout << top.GetName() << std::endl;
 
-	}
+	}*/
 	//WzFileSystem wz;
 	//wz.Init(L"./WzDir/");
 	//auto pMap = wz.GetItem("Map.wz");

@@ -1,4 +1,4 @@
-#include "FastAES.h"
+#include "WzStreamCodec.h"
 #include "WzArchive.h"
 #include "WzMappedFileStream.h"
 #include "WzAESKeyGen.h"
@@ -15,7 +15,7 @@ static unsigned char UserKey[] =
 	0x00, 0x00, 0x33, 0x00, 0x00, 0x00, 0x52, 0x00, 0x00, 0x00
 };
 
-void FastAES::GenKey(unsigned char* aKey, unsigned char *aResult)
+void WzStreamCodec::GenKey(unsigned char* aKey, unsigned char *aResult)
 {
 	WzAESKeyGen AESGen;
 	unsigned char aIV[16];
@@ -28,17 +28,18 @@ void FastAES::GenKey(unsigned char* aKey, unsigned char *aResult)
 		AESGen.EncryptBlock(aResult + i - 16, aResult + i);
 }
 
-FastAES::FastAES()
+WzStreamCodec::WzStreamCodec()
 {
+	//In the case, e.g. higher versions are not encrypted, just comment the line below.
 	GenKey(aBasicKey, aWzFileAESKey_TWMS);
 	Init();
 }
 
-FastAES::~FastAES()
+WzStreamCodec::~WzStreamCodec()
 {
 }
 
-void FastAES::Init()
+void WzStreamCodec::Init()
 {
 #pragma warning(disable:4309)
 	memcpy(aKeyStore[1], aWzFileAESKey_TWMS, 4096);
@@ -70,7 +71,7 @@ void FastAES::Init()
 	}
 }
 
-std::string FastAES::DecodeString(WzArchive *pArchive)
+std::string WzStreamCodec::DecodeString(WzArchive *pArchive)
 {
 	static std::codecvt_utf8<char16_t> conv;
 	static char in[0x10000];

@@ -2,11 +2,12 @@
 #include "WzArchive.h"
 #include "StandardFileSystem.h"
 #include "MemoryPoolMan.h"
+#include "WzNameSpace.h"
 #include <iostream>
 #include <fstream>
 
 #ifdef USE_FAST_AES
-#include "FastAES.h"
+#include "WzStreamCodec.h"
 #else
 #include "AESCipher.h"
 #endif
@@ -59,4 +60,12 @@ WzNameSpace* WzFileSystem::GetItem(const filesystem::path &sArchiveName)
 		return TryMount(sArchiveName);
 	
 	return r->second->GetRoot();
+}
+
+void WzFileSystem::Unmount(const filesystem::path& sArchiveName)
+{
+	auto pItem = GetItem(sArchiveName);
+	if (pItem)
+		FreeObj(pItem);
+	m_mArchive.erase(sArchiveName);
 }

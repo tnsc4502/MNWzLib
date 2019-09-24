@@ -14,15 +14,15 @@ typedef WzStream WzStreamType;
 #endif
 
 #ifdef USE_FAST_AES
-class FastAES;
-typedef FastAES CipherType;
+class WzStreamCodec;
+typedef WzStreamCodec CipherType;
 #else
 class AESCipher;
 typedef AESCipher CipherType;
 #endif
 
 class WzPackage;
-class FastAES;
+class WzStreamCodec;
 class WzNameSpace;
 
 class WzArchive

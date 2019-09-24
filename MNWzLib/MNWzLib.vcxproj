@@ -112,7 +112,7 @@
   <ItemGroup>
     <ClInclude Include="AESCipher.h" />
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="FastAES.h" />
+    <ClInclude Include="WzStreamCodec.h" />
     <ClInclude Include="MemoryPoolMan.h" />
     <ClInclude Include="StandardFileSystem.h" />
     <ClInclude Include="StringUtility.h" />
@@ -131,7 +131,7 @@
   <ItemGroup>
     <ClCompile Include="AESCipher.cpp" />
     <ClCompile Include="Exception.cpp" />
-    <ClCompile Include="FastAES.cpp" />
+    <ClCompile Include="WzStreamCodec.cpp" />
     <ClCompile Include="StringUtility.cpp" />
     <ClCompile Include="WzAESKeyGen.cpp" />
     <ClCompile Include="WzArchive.cpp" />

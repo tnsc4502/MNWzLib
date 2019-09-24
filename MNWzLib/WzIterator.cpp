@@ -75,13 +75,14 @@ WzIterator WzIterator::operator[](const char* sName)
 
 WzIterator WzIterator::begin()
 {
-	if (m_pIterProp)
+	auto pProp = m_pIterProp;
+	if (pProp || (m_pIterNS && (pProp = m_pIterNS->GetProperty())))
 	{
-		if (m_pIterProp->m_mChild.size() == 0)
+		if (pProp->m_mChild.size() == 0)
 			return end();
 
-		auto pChild = m_pIterProp->m_mChild.begin()->second;
-		return WzIterator(pChild, m_pIterProp->m_mChild.begin(), m_pIterProp->m_mChild.end());
+		auto pChild = pProp->m_mChild.begin()->second;
+		return WzIterator(pChild, pProp->m_mChild.begin(), pProp->m_mChild.end());
 	}
 	else if(m_pIterNS)
 	{

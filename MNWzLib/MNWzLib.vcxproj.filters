@@ -45,9 +45,6 @@
     <ClInclude Include="WzNameSpaceProperty.h">
       <Filter>NameSpace</Filter>
     </ClInclude>
-    <ClInclude Include="FastAES.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="WzProperty.h">
       <Filter>PCOM</Filter>
     </ClInclude>
@@ -61,6 +58,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="WzAESKeyGen.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="WzStreamCodec.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,9 +92,6 @@
     <ClCompile Include="WzNameSpaceProperty.cpp">
       <Filter>NameSpace</Filter>
     </ClCompile>
-    <ClCompile Include="FastAES.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="WzProperty.cpp">
       <Filter>PCOM</Filter>
     </ClCompile>
@@ -108,6 +105,9 @@
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="WzAESKeyGen.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="WzStreamCodec.cpp">
       <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
