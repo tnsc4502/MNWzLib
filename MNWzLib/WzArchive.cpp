@@ -21,31 +21,31 @@ WzArchive::WzArchive(const std::wstring& sArchivePath, const std::string& sArchi
 
 	//WzPackage::Init
 	char aHeader[5] = { 0 };
-	Read(aHeader, 4);
+	m_pStream->Read(aHeader, 4);
 
 	if (strcmp(aHeader, "PKG1"))
 	{
 		//Raw .Img file
-		m_bEncrypted = false;
+		m_pStream->SetEncrypted(false);
 		m_pTopNameSpace = AllocObj(WzNameSpaceProperty)(this, WzNameSpace::WzNameSpaceType::Type_Property, sArchiveName, 0);
 		m_pTopNameSpace->OnGetItem();
 		return;
 	}
 
 	unsigned long long ulLength = 0;
-	Read((char*)&ulLength, sizeof(ulLength));
+	m_pStream->Read((char*)&ulLength, sizeof(ulLength));
 	SetLength(ulLength);
 
 	unsigned int uBeginPos = 0;
-	Read((char*)&uBeginPos, sizeof(uBeginPos));
+	m_pStream->Read((char*)&uBeginPos, sizeof(uBeginPos));
 	m_uBeginPos = uBeginPos;
-	SetPosition(m_uBeginPos);
+	m_pStream->SetPosition(m_uBeginPos);
 
 	unsigned int uEncVersion = 0;
-	Read((char*)&uEncVersion, sizeof(short));
+	m_pStream->Read((char*)&uEncVersion, sizeof(short));
 	std::string sVersion;
 
-	m_pTopNameSpace = AllocObj(WzPackage)(this, WzNameSpace::WzNameSpaceType::Type_Directory, sArchiveName, GetPosition());
+	m_pTopNameSpace = AllocObj(WzPackage)(this, WzNameSpace::WzNameSpaceType::Type_Directory, sArchiveName, m_pStream->GetPosition());
 	//Find matched version key.
 	for (unsigned int uVersion = 1024; uVersion > 0; --uVersion)
 	{
@@ -77,10 +77,10 @@ WzArchive *WzArchive::Mount(const std::wstring & sArchivePath, const std::string
 	return pArchive;
 }
 
-void WzArchive::SetPosition(unsigned int uPos)
+/*void WzArchive::SetPosition(unsigned int uPos)
 {
 	m_pStream->SetPosition(uPos);
-}
+}*/
 
 WzStreamType* WzArchive::GetStream()
 {
@@ -92,10 +92,10 @@ CipherType* WzArchive::GetCipher()
 	return m_pCipher;
 }
 
-unsigned int WzArchive::GetPosition() const
+/*unsigned int WzArchive::GetPosition() const
 {
 	return m_pStream->GetPosition();
-}
+}*/
 
 unsigned int WzArchive::GetBeginPos() const
 {
@@ -117,49 +117,22 @@ void WzArchive::SetLength(unsigned long long int ulLength)
 	m_pStream->SetLength(ulLength);
 }
 
-void WzArchive::Read(char *pBuffer, unsigned int uSize)
+/*void WzArchive::Read(char *pBuffer, unsigned int uSize)
 {
 	m_pStream->Read(pBuffer, uSize);
-}
+}*/
 
 WzNameSpace* WzArchive::GetRoot()
 {
 	return m_pTopNameSpace;
 }
 
-std::string WzArchive::DecodeString()
+std::string WzArchive::DecodeString(WzStreamType *pStream)
 {
-	return m_pCipher->DecodeString(this);
+	return m_pCipher->DecodeString(pStream);
 }
 
-std::string WzArchive::DecodePropString(unsigned int uRootPropPos)
+std::string WzArchive::DecodePropString(WzStreamType *pStream, unsigned int uRootPropPos)
 {
-	unsigned int nType = 0;
-	Read((char*)&nType, 1);
-	switch (nType)
-	{
-		case 0x00:
-		case 0x73:
-			return DecodeString();
-		case 0x01:
-		case 0x1B:
-		{
-			//Read offset of that foreign resource.
-			Read((char*)&nType, 4);
-			unsigned int uCurrentPos = GetPosition();
-			SetPosition(uRootPropPos + nType);
-			std::string ret = DecodeString();
-			SetPosition(uCurrentPos);
-			return ret;
-		}
-		default:
-			return "";
-			//WvsException::FatalError("Unknown type of prop string <%d>.", nType);
-	}
+	return m_pCipher->DecodePropString(pStream, uRootPropPos);
 }
-
-bool WzArchive::Encrypted() const
-{
-	return m_bEncrypted;
-}
-

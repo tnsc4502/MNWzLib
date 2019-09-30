@@ -27,7 +27,6 @@ class WzNameSpace;
 
 class WzArchive
 {
-	bool m_bEncrypted = true;
 	unsigned long long int m_ulLength = 0;
 	unsigned int m_uBeginPos = 0, m_uStreamPos = 0, m_uKey = 0;
 
@@ -40,25 +39,24 @@ class WzArchive
 public:
 	~WzArchive();
 	static WzArchive* Mount(const std::wstring& sArchivePath, const std::string& sArchiveName, CipherType* pChipher);
-	void SetPosition(unsigned int uPos);
+	//void SetPosition(unsigned int uPos);
 	WzStreamType* GetStream();
 	CipherType* GetCipher();
-	unsigned int GetPosition() const;
+	//unsigned int GetPosition() const;
 	unsigned int GetBeginPos() const;
 	unsigned int GetArchiveKey() const;
 	unsigned long long int GetLength() const;
 	void SetLength(unsigned long long int ulLength);
-	void Read(char *pBuffer, unsigned int uSize);
+	//void Read(char *pBuffer, unsigned int uSize);
 	WzNameSpace* GetRoot();
-	std::string DecodeString();
-	std::string DecodePropString(unsigned int uRootPropPos);
-	bool Encrypted() const;
+	std::string DecodeString(WzStreamType *pStream);
+	std::string DecodePropString(WzStreamType *pStream, unsigned int uRootPropPos);
 
 	//ZDataFilter::_Read
-	template<typename T>
+	/*template<typename T>
 	T ReadFilter()
 	{
 		return m_pStream->Read<T>();
-	}
+	}*/
 };
 

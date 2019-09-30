@@ -4,14 +4,11 @@
 
 class WzIterator
 {
-	WzProperty *m_pIterProp;
 	WzNameSpace *m_pIterNS;
 
-	WzProperty::PropContainerType::iterator m_itProp, m_itEndProp;
 	WzNameSpace::NameSpaceContainerType::iterator m_itNS, m_itEndNS;
 
 	WzIterator();
-	WzIterator(WzProperty *pNextProp, WzProperty::PropContainerType::iterator& it, WzProperty::PropContainerType::iterator& itEnd);
 	WzIterator(WzNameSpace *pNextNS, WzNameSpace::NameSpaceContainerType::iterator& it, WzNameSpace::NameSpaceContainerType::iterator& itEnd);
 
 public:
@@ -21,7 +18,7 @@ public:
 	WzIterator operator[](const std::string& sName);
 	WzIterator operator[](const char* sName);
 	WzIterator begin();
-	WzIterator end();
+	const static WzIterator& end();
 	WzIterator& operator++();
 	WzIterator& operator*();
 	const std::string& GetName();
@@ -33,5 +30,6 @@ public:
 	operator double();
 	operator float();
 	operator const std::string&();
+	std::vector<std::string> EnumerateChildName();
 };
 

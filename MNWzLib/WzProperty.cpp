@@ -4,6 +4,7 @@
 #include <iostream>
 
 WzProperty::WzProperty(const std::string& sPropName)
+	: WzNameSpace(nullptr, WzNameSpaceType::Type_Property, sPropName, 0)
 {
 	m_sName = sPropName;
 	m_pArchive = nullptr;
@@ -11,35 +12,37 @@ WzProperty::WzProperty(const std::string& sPropName)
 }
 
 WzProperty::WzProperty(WzArchive* pArchive, const std::string& sPropName, unsigned int uBeginPos, unsigned int uRootPropPos)
-	: m_sName(sPropName)
+	: WzNameSpace(pArchive, WzNameSpaceType::Type_Property, sPropName, uBeginPos)
 {
 	m_pArchive = pArchive;
 	m_uBeginPos = uBeginPos;
+	WzStreamType wzStream(*m_pArchive->GetStream());
+	wzStream.SetPosition(uBeginPos);
 
 	int nHeader = 0;
-	std::string sType = m_pArchive->DecodePropString(uRootPropPos), sName;
+	std::string sType = pArchive->DecodePropString(&wzStream, uRootPropPos), sName;
 	if (sType == "Property")
 	{
-		m_pArchive->Read((char*)&nHeader, 2);
+		wzStream.Read((char*)&nHeader, 2);
 
-		int nCount = m_pArchive->ReadFilter<int>(), nType = 0;
+		int nCount = wzStream.ReadFilter<int>(), nType = 0;
 		unsigned uOffset = 0, uNextPos = 0;
 		for (int i = 0; i < nCount; ++i)
 		{
 			m_wzVariant.uData.liData = 0;
 			nType = 0;
 			nHeader = 0;
-			sName = m_pArchive->DecodePropString(uRootPropPos);
-			m_pArchive->Read((char*)&nHeader, 1);
+			sName = pArchive->DecodePropString(&wzStream, uRootPropPos);
+			wzStream.Read((char*)&nHeader, 1);
 			m_wzVariant.fType = nHeader;
 
 			WzProperty* pSubItem = nullptr;
 			if (nHeader == 9) //perform resursive parsing.
 			{
-				m_pArchive->Read((char*)&uOffset, 4);
-				uNextPos = m_pArchive->GetPosition() + uOffset;
-				pSubItem = AllocObj(WzProperty)(m_pArchive, sName, m_pArchive->GetPosition(), uRootPropPos);
-				m_pArchive->SetPosition(uNextPos);
+				wzStream.Read((char*)&uOffset, 4);
+				uNextPos = wzStream.GetPosition() + uOffset;
+				pSubItem = AllocObj(WzProperty)(m_pArchive, sName, wzStream.GetPosition(), uRootPropPos);
+				wzStream.SetPosition(uNextPos);
 			}
 			else
 			{
@@ -49,33 +52,33 @@ WzProperty::WzProperty(WzArchive* pArchive, const std::string& sPropName, unsign
 					case 19:
 					case 3:
 						pSubItem->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Filtered_Integer;
-						pSubItem->m_wzVariant.uData.liData = m_pArchive->ReadFilter<int>();
+						pSubItem->m_wzVariant.uData.liData = wzStream.ReadFilter<int>();
 						break;
 					case 20:
 						pSubItem->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Filtered_Long;
-						pSubItem->m_wzVariant.uData.liData = m_pArchive->ReadFilter<unsigned long long int>();
+						pSubItem->m_wzVariant.uData.liData = wzStream.ReadFilter<unsigned long long int>();
 						break;
 					case 2:
 					case 11:
 						pSubItem->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Int16;
 						pSubItem->m_wzVariant.uData.liData = 0;
-						m_pArchive->Read((char*)&pSubItem->m_wzVariant.uData.liData, 2);
+						wzStream.Read((char*)&pSubItem->m_wzVariant.uData.liData, 2);
 						break;
 					case 4:
 						pSubItem->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Float32;
-						m_pArchive->Read((char*)&pSubItem->m_wzVariant.uData.liData, 1);
+						wzStream.Read((char*)&pSubItem->m_wzVariant.uData.liData, 1);
 						if (pSubItem->m_wzVariant.uData.liData == 0x80)
-							m_pArchive->Read((char*)&pSubItem->m_wzVariant.uData.fData, 4);
+							wzStream.Read((char*)&pSubItem->m_wzVariant.uData.fData, 4);
 						else
 							pSubItem->m_wzVariant.uData.fData = 0;
 						break;
 					case 5:
 						pSubItem->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Double64;
-						m_pArchive->Read((char*)&pSubItem->m_wzVariant.uData.dData, 8);
+						wzStream.Read((char*)&pSubItem->m_wzVariant.uData.dData, 8);
 						break;
 					case 8:
 						pSubItem->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_String;
-						pSubItem->m_wzVariant.sData = m_pArchive->DecodePropString(uRootPropPos);
+						pSubItem->m_wzVariant.sData = pArchive->DecodePropString(&wzStream, uRootPropPos);
 						break;
 				}
 			}
@@ -88,8 +91,8 @@ WzProperty::WzProperty(WzArchive* pArchive, const std::string& sPropName, unsign
 		auto pX = AllocObj(WzProperty)("x");
 		auto pY = AllocObj(WzProperty)("y");
 		pX->m_wzVariant.vType = pY->m_wzVariant.vType = WzDelayedVariant::VariantType::vt_Filtered_Integer;
-		pX->m_wzVariant.uData.liData = m_pArchive->ReadFilter<int>();
-		pY->m_wzVariant.uData.liData = m_pArchive->ReadFilter<int>();
+		pX->m_wzVariant.uData.liData = wzStream.ReadFilter<int>();
+		pY->m_wzVariant.uData.liData = wzStream.ReadFilter<int>();
 
 		m_mChild.insert({ "x", pX });
 		m_mChild.insert({ "y", pY });
@@ -106,18 +109,16 @@ WzProperty::~WzProperty()
 		FreeObj(prChild.second);
 }
 
-const std::string & WzProperty::GetName()
+void WzProperty::OnGetItem()
 {
-	return m_sName;
-}
-
-WzProperty* WzProperty::GetItem(const std::string & sName)
-{
-	auto findIter = m_mChild.find(sName);
-	return findIter == m_mChild.end() ? nullptr : findIter->second;
 }
 
 WzDelayedVariant& WzProperty::GetVariant()
 {
 	return m_wzVariant;
+}
+
+WzProperty * WzProperty::GetProperty()
+{
+	return this;
 }

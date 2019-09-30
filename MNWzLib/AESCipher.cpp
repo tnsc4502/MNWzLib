@@ -85,7 +85,7 @@ std::string AESCipher::DecodeString(WzArchive * pArchive)
 	static char ns[0x10000];
 	int nLen = 0;
 
-	pArchive->Read((char*)&nLen, 1);
+	/*pArchive->Read((char*)&nLen, 1);
 	char cLen = ((char*)&nLen)[0];
 	if (cLen > 0)
 	{
@@ -106,7 +106,7 @@ std::string AESCipher::DecodeString(WzArchive * pArchive)
 	}
 
 	pArchive->GetStream()->SetPosition(pArchive->GetStream()->GetPosition() + nLen);
-	ns[nLen] = 0;
+	ns[nLen] = 0;*/
 	return std::string(ns, nLen);
 }
 

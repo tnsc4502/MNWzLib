@@ -80,14 +80,26 @@ void SkillInfo::IterateSkillInfo()
 {
 	printf("[SkillInfo::IterateSkillInfo<IterateSkillInfo>]On iterating all skills....\n");
 	t1 = std::chrono::high_resolution_clock::now();
-	((WzPackage*)pArchive)->LoadSubItem(); //Expand all sub nodes
+	//((WzPackage*)pArchive)->LoadSubItem(); //Expand all sub nodes
 	//static auto& skillWz = stWzResMan->GetWz(Wz::Skill);
 	bool continued = false;
 	int nRootID;
-	static std::vector<std::pair<int, WzIterator>> aRoot;
+	static std::vector<std::pair<int, std::string>> aRoot;
 	WzIterator iter(pArchive);
+
 	std::string name;
-	for (auto& node : iter)
+	auto& aChildName = iter.EnumerateChildName();
+	for (auto& sName : aChildName)
+	{
+		name = sName;
+		name[name.find('.')] = '\0';
+		if (!IsValidRootName(name))
+			continue;
+
+		++m_nOnLoadingSkills;
+		aRoot.push_back({ atoi(sName.c_str()), sName });
+	}
+	/*for (auto& node : iter)
 	{
 		name = node.GetName();
 		name[name.find('.')] = '\0';
@@ -95,7 +107,7 @@ void SkillInfo::IterateSkillInfo()
 			continue;
 		//printf("node name = %s\n", node.GetName().c_str());
 		aRoot.push_back({ atoi(name.c_str()), node });
-	}
+	}*/
 	m_nRootCount = (int)aRoot.size();
 	for (auto& node : aRoot)
 	{
@@ -106,29 +118,29 @@ void SkillInfo::IterateSkillInfo()
 	}
 }
 
-void SkillInfo::LoadSkillRoot(int nSkillRootID, void * pData)
+void SkillInfo::LoadSkillRoot(int nSkillRootID, void * pName)
 {
 	auto skillRootIter = m_mSkillByRootID.find(nSkillRootID);
 	if (skillRootIter == m_mSkillByRootID.end()) 
 		m_mSkillByRootID.insert({nSkillRootID, new std::map<int, SkillEntry*>() });
 	//auto skillRootImg = (WzNameSpace*)pData;
+	std::string& sName = *((std::string*)pName);
 
-	WzIterator&skillIter = *((WzIterator*)pData);
+	WzIterator iter(pArchive);
+	WzIterator skillIter = iter[sName];
 	skillIter = skillIter["skill"];
 
 	int nSkillID = 0;
 	for (auto skillImg : skillIter)
 	{
-		++m_nOnLoadingSkills;
-		//printf("Iter skill root : %s\n", skillImg.GetName().c_str());
 		nSkillID = atoi(skillImg.GetName().c_str());
 		LoadSkill(nSkillRootID, nSkillID, (void*)&skillImg);
-		--m_nOnLoadingSkills;
 	}
+	--m_nOnLoadingSkills;
 	if (m_nOnLoadingSkills == 0 && m_mSkillByRootID.size() >= m_nRootCount) 
 	{
 		auto t2 = std::chrono::high_resolution_clock::now();
-		printf("%d item loaded, time = %lld\n", 0, std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count());
+		printf("%d item loaded, time = %lld\n", m_mSkillByRootID.size(), std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count());
 
 		printf("Damage = %d\n", GetSkillByID(5211005)->GetLevelData(1)->m_nDamage);
 		printf("mpCon = %d\n", GetSkillByID(5211005)->GetLevelData(27)->m_nMpCon);

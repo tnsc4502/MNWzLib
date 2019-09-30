@@ -13,7 +13,22 @@ int main()
 {
 	WzFileSystem wz;
 	wz.Init(L"./WzDir/");
+	/*auto pEtc = wz.GetItem("Etc.wz");
+	WzIterator etc(pEtc);
+	for (auto& node : etc)
+		std::cout << node.GetName() << std::endl;*/
+	/*auto ppSkill = wz.GetItem("Skill.wz");
+	WzIterator sSkill(ppSkill);
+	for (auto& top : sSkill)
+	{
+		auto& skill = top["skill"];
+		for (auto& skills : skill)
+		{
+			std::cout << skills.GetName() << std::endl;
+		}
+		std::cout << top.GetName() << std::endl;
 
+	}*/
 	//WzIterator reward(wz.GetItem("Reward.img"));
 	/*for (auto& mobNode : reward)
 	{
@@ -125,6 +140,7 @@ int main()
 	SkillInfo::GetInstance()->IterateSkillInfo();
 	//auto t2 = std::chrono::high_resolution_clock::now();
 	//printf("%d item loaded, time = %lld\n", 0, std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count());
+	//while (1);
 	int n;
 	std::cin >> n;
 }

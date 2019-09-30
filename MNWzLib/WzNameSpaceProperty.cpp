@@ -9,7 +9,7 @@
 //This actually is "ClipArchive" impl. in official codes.
 void WzNameSpaceProperty::ClipArchive()
 {
-	m_pArchive->SetPosition(m_uBeginPos);
+	//m_pArchive->SetPosition(m_uBeginPos);
 	m_pProperty = AllocObj(WzProperty)(m_pArchive, GetName(), m_uBeginPos, m_uBeginPos);
 	m_bParsed = true;
 }
